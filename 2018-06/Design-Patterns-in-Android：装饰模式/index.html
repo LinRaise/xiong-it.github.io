@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-90313637-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="true">
+    
+    
+    
+    <title>Design Patterns in Android：装饰模式 | MichaelX&#39;s Blog | MichaelX的开发博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Android,设计模式,Design Pattern,装饰模式,Decorator">
+    <meta name="description" content="装饰模式是干嘛的呢？它在项目中有哪些用途呢？装饰模式在Android源码中有哪些应用呢？本文将和读者朋友一起分享探讨装饰者模式在Android中的应用和实践。">
+<meta name="keywords" content="Android,设计模式,Design Pattern,装饰模式,Decorator">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Design Patterns in Android：装饰模式">
+<meta property="og:url" content="http://blog.michaelx.tech/2018-06/Design-Patterns-in-Android：装饰模式/index.html">
+<meta property="og:site_name" content="MichaelX&#39;s Blog">
+<meta property="og:description" content="装饰模式是干嘛的呢？它在项目中有哪些用途呢？装饰模式在Android源码中有哪些应用呢？本文将和读者朋友一起分享探讨装饰者模式在Android中的应用和实践。">
+<meta property="og:image" content="http://oler3nq5z.bkt.clouddn.com/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8Fuml.png-80style">
+<meta property="og:image" content="http://oler3nq5z.bkt.clouddn.com/Context%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8Fuml%E7%B1%BB%E5%9B%BE.png-80style">
+<meta property="og:image" content="http://oler3nq5z.bkt.clouddn.com/%E7%9B%B4%E6%92%AD%E8%A3%85%E9%A5%B0%E8%80%85uml.jpg-80style">
+<meta property="og:updated_time" content="2018-06-13T09:26:54.603Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Design Patterns in Android：装饰模式">
+<meta name="twitter:description" content="装饰模式是干嘛的呢？它在项目中有哪些用途呢？装饰模式在Android源码中有哪些应用呢？本文将和读者朋友一起分享探讨装饰者模式在Android中的应用和实践。">
+<meta name="twitter:image" content="http://oler3nq5z.bkt.clouddn.com/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8Fuml.png-80style">
+    
+        <link rel="alternate" type="application/atom+xml" title="MichaelX&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.0">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">MichaelX</h5>
+          https://github.com/xiong-it
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                关于
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xiong-it" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://blog.csdn.net/xiong_it" target="_blank" >
+                <i class="icon icon-lg icon-link"></i>
+                CSDN
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Design Patterns in Android：装饰模式</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Design Patterns in Android：装饰模式</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-06-13T17:12:00.000Z" itemprop="datePublished" class="page-time">
+  2018-06-13
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Design-Pattern/">Design Pattern</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#装饰模式定义"><span class="post-toc-number">2.</span> <span class="post-toc-text">装饰模式定义</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#装饰模式的UML类图"><span class="post-toc-number">3.</span> <span class="post-toc-text">装饰模式的UML类图</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#装饰模式示例代码"><span class="post-toc-number">4.</span> <span class="post-toc-text">装饰模式示例代码</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Android源码中的装饰模式"><span class="post-toc-number">5.</span> <span class="post-toc-text">Android源码中的装饰模式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#案例一"><span class="post-toc-number">5.1.</span> <span class="post-toc-text">案例一</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#案例二"><span class="post-toc-number">5.2.</span> <span class="post-toc-text">案例二</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Android开发中的装饰模式实践"><span class="post-toc-number">6.</span> <span class="post-toc-text">Android开发中的装饰模式实践</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#总结"><span class="post-toc-number">7.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-Design-Patterns-in-Android：装饰模式"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Design Patterns in Android：装饰模式</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-06-13 17:12:00" datetime="2018-06-13T17:12:00.000Z"  itemprop="datePublished">2018-06-13</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Design-Pattern/">Design Pattern</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>装饰模式是干嘛的呢？它在项目中有哪些用途呢？装饰模式在Android源码中有哪些应用呢？本文将和读者朋友一起分享探讨装饰者模式在Android中的应用和实践。<br><a id="more"></a></p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>装饰模式是干嘛的呢？它在项目中有哪些用途呢？装饰模式在Android源码中有哪些应用呢？本文将和读者朋友一起分享探讨装饰者模式在Android中的应用和实践。</p>
+<pre><code>本文原创作者MichaelX。 
+CSDN博客：https://blog.csdn.net/xiong_it 
+掘金主页：https://juejin.im/user/56efe6461ea493005565dafd 
+知乎专栏：https://zhuanlan.zhihu.com/c_144117654 
+个人博客：http://blog.michaelx.tech 
+</code></pre><p>转载请注明出处。</p>
+<h1 id="装饰模式定义"><a href="#装饰模式定义" class="headerlink" title="装饰模式定义"></a>装饰模式定义</h1><blockquote>
+<p>装饰者模式：也叫wrapper模式。动态地给一个对象添加一些额外的职责，就增加功能来说，装饰者模式相比生成子类更加灵活，提供了有别于继承的另一种选择。</p>
+</blockquote>
+<h1 id="装饰模式的UML类图"><a href="#装饰模式的UML类图" class="headerlink" title="装饰模式的UML类图"></a>装饰模式的UML类图</h1><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://oler3nq5z.bkt.clouddn.com/%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8Fuml.png-80style" alt="这里写图片描述" title="">
+                </div>
+                <div class="image-caption">这里写图片描述</div>
+            </figure>
+<p>有四个角色需要说明：</p>
+<ul>
+<li>Component抽象构件<br>Component是一个接口或者是抽象类，就是定义我们最核心的对象，也就是最原始的对象，如上面的成绩单。</li>
+</ul>
+<p><strong>注意：</strong>在装饰模式中，必然有一个最基本、最核心、最原始的接口或抽象类充当Component抽象构件。</p>
+<ul>
+<li><p>ConcreteComponent 具体构件<br>ConcreteComponent是最核心、最原始、最基本的接口或抽象类的实现，你要装饰的就是它。</p>
+</li>
+<li><p>Decorator装饰角色<br>一般是一个抽象类，做什么用呢？实现接口或者抽象方法，它里面可不一定有抽象的方法呀，在它的属性里必然有一个private变量指向Component抽象构件。</p>
+</li>
+<li><p>具体装饰角色<br>ConcreteDecoratorA和ConcreteDecoratorB是两个具体的装饰类，你要把你最核心的、最原始的、最基本的东西装饰成其他东西。</p>
+</li>
+</ul>
+<h1 id="装饰模式示例代码"><a href="#装饰模式示例代码" class="headerlink" title="装饰模式示例代码"></a>装饰模式示例代码</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Component</span> </span>&#123;</div><div class="line">     <span class="comment">//抽象的方法</span></div><div class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">operate</span><span class="params">()</span></span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteComponent</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</div><div class="line">     <span class="comment">//具体实现</span></div><div class="line">     <span class="meta">@Override</span></div><div class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operate</span><span class="params">()</span> </span>&#123;</div><div class="line">             System.out.println(<span class="string">"do Something"</span>);</div><div class="line">     &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Decorator</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</div><div class="line">     <span class="keyword">private</span> Component component = <span class="keyword">null</span>;        </div><div class="line">     <span class="comment">//通过构造函数传递被修饰者</span></div><div class="line">     <span class="function"><span class="keyword">public</span> <span class="title">Decorator</span><span class="params">(Component _component)</span></span>&#123;</div><div class="line">             <span class="keyword">this</span>.component = _component;</div><div class="line">     &#125;</div><div class="line">     <span class="comment">//委托给被修饰者执行</span></div><div class="line">     <span class="meta">@Override</span></div><div class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operate</span><span class="params">()</span> </span>&#123;</div><div class="line">             <span class="keyword">this</span>.component.operate();</div><div class="line">     &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteDecorator1</span> <span class="keyword">extends</span> <span class="title">Decorator</span> </span>&#123;</div><div class="line">     <span class="comment">//定义被修饰者</span></div><div class="line">     <span class="function"><span class="keyword">public</span> <span class="title">ConcreteDecorator1</span><span class="params">(Component _component)</span></span>&#123;</div><div class="line">             <span class="keyword">super</span>(_component);</div><div class="line">     &#125;</div><div class="line">     <span class="comment">//定义自己的修饰方法</span></div><div class="line">     <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">method1</span><span class="params">()</span></span>&#123;</div><div class="line">             System.out.println(<span class="string">"method1 修饰"</span>);</div><div class="line">     &#125;</div><div class="line">     <span class="comment">//重写父类的Operation方法</span></div><div class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operate</span><span class="params">()</span></span>&#123;</div><div class="line">             <span class="keyword">this</span>.method1();</div><div class="line">             <span class="keyword">super</span>.operate();</div><div class="line">     &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConcreteDecorator2</span> <span class="keyword">extends</span> <span class="title">Decorator</span> </span>&#123;</div><div class="line">     <span class="comment">//定义被修饰者</span></div><div class="line">     <span class="function"><span class="keyword">public</span> <span class="title">ConcreteDecorator2</span><span class="params">(Component _component)</span></span>&#123;</div><div class="line">             <span class="keyword">super</span>(_component);</div><div class="line">     &#125;</div><div class="line">     <span class="comment">//定义自己的修饰方法</span></div><div class="line">     <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">method2</span><span class="params">()</span></span>&#123;</div><div class="line">             System.out.println(<span class="string">"method2修饰"</span>);</div><div class="line">     &#125;</div><div class="line">     <span class="comment">//重写父类的Operation方法</span></div><div class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">operate</span><span class="params">()</span></span>&#123;</div><div class="line">             <span class="keyword">super</span>.operate();</div><div class="line">             <span class="keyword">this</span>.method2();</div><div class="line">     &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用场景类<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">             Component component = <span class="keyword">new</span> ConcreteComponent();</div><div class="line">             <span class="comment">//第一次修饰</span></div><div class="line">             component = <span class="keyword">new</span> ConcreteDecorator1(component);</div><div class="line">             <span class="comment">//第二次修饰</span></div><div class="line">             component = <span class="keyword">new</span> ConcreteDecorator2(component);</div><div class="line">             <span class="comment">//修饰后运行</span></div><div class="line">             component.operate();</div><div class="line">     &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="Android源码中的装饰模式"><a href="#Android源码中的装饰模式" class="headerlink" title="Android源码中的装饰模式"></a>Android源码中的装饰模式</h1><h2 id="案例一"><a href="#案例一" class="headerlink" title="案例一"></a>案例一</h2><p>Context是Android中一个几乎无处不在的角色，ContextWrapper/ContextThemeWrapper就在继承过程中承担了ContextImpl的装饰者角色。<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://oler3nq5z.bkt.clouddn.com/Context%E8%A3%85%E9%A5%B0%E8%80%85%E6%A8%A1%E5%BC%8Fuml%E7%B1%BB%E5%9B%BE.png-80style" alt="这里写图片描述" title="">
+                </div>
+                <div class="image-caption">这里写图片描述</div>
+            </figure><br>ContextThemeWrapper部分代码为例：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ContextThemeWrapper</span> <span class="keyword">extends</span> <span class="title">ContextWrapper</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> mThemeResource;</div><div class="line">    <span class="keyword">private</span> Resources.Theme mTheme;</div><div class="line">    <span class="keyword">private</span> LayoutInflater mInflater;</div><div class="line">    <span class="keyword">private</span> Configuration mOverrideConfiguration;</div><div class="line">    <span class="keyword">private</span> Resources mResources;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> AssetManager <span class="title">getAssets</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">// Ensure we're returning assets with the correct configuration.</span></div><div class="line">        <span class="keyword">return</span> getResourcesInternal().getAssets();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Resources <span class="title">getResources</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> getResourcesInternal();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> Resources <span class="title">getResourcesInternal</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (mResources == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">if</span> (mOverrideConfiguration == <span class="keyword">null</span>) &#123;</div><div class="line">                mResources = <span class="keyword">super</span>.getResources();</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">final</span> Context resContext = createConfigurationContext(mOverrideConfiguration);</div><div class="line">                mResources = resContext.getResources();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> mResources;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> Resources.<span class="function">Theme <span class="title">getTheme</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (mTheme != <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">return</span> mTheme;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        mThemeResource = Resources.selectDefaultTheme(mThemeResource,</div><div class="line">                getApplicationInfo().targetSdkVersion);</div><div class="line">        initializeTheme();</div><div class="line"></div><div class="line">        <span class="keyword">return</span> mTheme;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">getSystemService</span><span class="params">(String name)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (LAYOUT_INFLATER_SERVICE.equals(name)) &#123;</div><div class="line">            <span class="keyword">if</span> (mInflater == <span class="keyword">null</span>) &#123;</div><div class="line">                mInflater = LayoutInflater.from(getBaseContext()).cloneInContext(<span class="keyword">this</span>);</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">return</span> mInflater;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> getBaseContext().getSystemService(name);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onApplyThemeResource</span><span class="params">(Resources.Theme theme, <span class="keyword">int</span> resId, <span class="keyword">boolean</span> first)</span> </span>&#123;</div><div class="line">        theme.applyStyle(resId, <span class="keyword">true</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initializeTheme</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">final</span> <span class="keyword">boolean</span> first = mTheme == <span class="keyword">null</span>;</div><div class="line">        <span class="keyword">if</span> (first) &#123;</div><div class="line">            mTheme = getResources().newTheme();</div><div class="line">            <span class="keyword">final</span> Resources.Theme theme = getBaseContext().getTheme();</div><div class="line">            <span class="keyword">if</span> (theme != <span class="keyword">null</span>) &#123;</div><div class="line">                mTheme.setTo(theme);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        onApplyThemeResource(mTheme, mThemeResource, first);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="案例二"><a href="#案例二" class="headerlink" title="案例二"></a>案例二</h2><p>还有一个比较典型的例子是RecyclerView通过RecyclerView.ItemDecorator来扩展样式。<br>不过这个是一个变种的装饰者，这个实践比较另类的地方在于：我们通常是在装饰者的的执行方法中扩展被代理对象的行为，而RecyclerView+ItemDecorator的实践则恰恰相反，ItemDecorator反倒成了被代理对象，RecyclerView成了装饰者。</p>
+<h1 id="Android开发中的装饰模式实践"><a href="#Android开发中的装饰模式实践" class="headerlink" title="Android开发中的装饰模式实践"></a>Android开发中的装饰模式实践</h1><p>说实话，笔者自己也没有实践过装饰模式，但是有一个场景需求应该是可以应用装饰模式的。比如一个直播场景，点击礼物时需要礼物飞出来，双击有一个爱心❤️飘出来，那么礼物和爱心就可以看成是直播画面的装饰者，类关系如下：<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="http://oler3nq5z.bkt.clouddn.com/%E7%9B%B4%E6%92%AD%E8%A3%85%E9%A5%B0%E8%80%85uml.jpg-80style" alt="这里写图片描述" title="">
+                </div>
+                <div class="image-caption">这里写图片描述</div>
+            </figure><br>GirlView：主播画面<br>GirlDecorator：主播画面装饰者<br>GiftView：礼物效果<br>LoveView：爱心效果</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p><strong>特点：</strong>装饰模式其实就是在代理某个对象过程中，给特定的代理行为前后加上不同的装饰行为，比如文中的<code>ContextThemeWrapper</code>就在代理<code>ContextImpl</code>的<code>getSystemService</code>这个行为过程中，加上了返回LayoutInflater这个装饰行为。因此，我们也可以认为<strong>装饰模式其实是一种特殊的代理模式</strong></p>
+<p>装饰模式的优缺点<br>优点：</p>
+<ul>
+<li><p>装饰类和被装饰类可以独立发展，而不会相互耦合。换句话说，Component类无须知道Decorator类，Decorator类是从外部来扩展Component类的功能，而Decorator也不用知道具体的构件。</p>
+</li>
+<li><p>装饰模式是继承关系的一个替代方案。我们看装饰类Decorator，不管装饰多少层，返回的对象还是Component，实现的还是is-a的关系。</p>
+</li>
+<li>装饰模式可以动态地扩展一个实现类的功能，这不需要多说，装饰模式的定义就是如此。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>装饰太多层时会增加系统复杂度，有时出现问题可能无法快速定位。</li>
+</ul>
+<p>当某个对象的行为需要加强，并且可能有多种加强的需求时，那么装饰模式有可能就能排上用场了。</p>
+<p>好了，今天的《设计模式Android篇：装饰模式》就到这里，请继续关注<a href="http://blog.csdn.net/xiong_it/article/details/54574020" target="_blank" rel="external">《Design Patterns in Android》（设计模式Android篇）</a>系列博文，欢迎各位读者朋友评论区拍砖交流，共同进步。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-06-13T09:26:54.603Z" itemprop="dateUpdated">2018-06-13 09:26:54</time>
+</span><br>
+
+
+        
+        版权声明：本文为博主原创文章，转载请注明出处：<<a href="/2018-06/Design-Patterns-in-Android：装饰模式/" target="_blank" rel="external">http://blog.michaelx.tech/2018-06/Design-Patterns-in-Android：装饰模式/</a>
+        
+    </div>
+    <footer>
+        <a href="http://blog.michaelx.tech">
+            <img src="/img/avatar.jpg" alt="MichaelX">
+            MichaelX
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Decorator/">Decorator</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Design-Pattern/">Design Pattern</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/装饰模式/">装饰模式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.michaelx.tech/2018-06/Design-Patterns-in-Android：装饰模式/&title=《Design Patterns in Android：装饰模式》 — MichaelX's Blog&pic=http://blog.michaelx.tech/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.michaelx.tech/2018-06/Design-Patterns-in-Android：装饰模式/&title=《Design Patterns in Android：装饰模式》 — MichaelX's Blog&source=装饰模式是干嘛的呢？它在项目中有哪些用途呢？装饰模式在Android源码中有哪些应用呢？本文将和读者朋友一起分享探讨装饰者模式在Android中的应用和实践。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.michaelx.tech/2018-06/Design-Patterns-in-Android：装饰模式/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Design Patterns in Android：装饰模式》 — MichaelX's Blog&url=http://blog.michaelx.tech/2018-06/Design-Patterns-in-Android：装饰模式/&via=http://blog.michaelx.tech" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.michaelx.tech/2018-06/Design-Patterns-in-Android：装饰模式/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2018-05/Design-Patterns-in-Android：责任链模式/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Design Patterns in Android：责任链模式</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>MichaelX &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.michaelx.tech/2018-06/Design-Patterns-in-Android：装饰模式/&title=《Design Patterns in Android：装饰模式》 — MichaelX's Blog&pic=http://blog.michaelx.tech/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.michaelx.tech/2018-06/Design-Patterns-in-Android：装饰模式/&title=《Design Patterns in Android：装饰模式》 — MichaelX's Blog&source=装饰模式是干嘛的呢？它在项目中有哪些用途呢？装饰模式在Android源码中有哪些应用呢？本文将和读者朋友一起分享探讨装饰者模式在Android中的应用和实践。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.michaelx.tech/2018-06/Design-Patterns-in-Android：装饰模式/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Design Patterns in Android：装饰模式》 — MichaelX's Blog&url=http://blog.michaelx.tech/2018-06/Design-Patterns-in-Android：装饰模式/&via=http://blog.michaelx.tech" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.michaelx.tech/2018-06/Design-Patterns-in-Android：装饰模式/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACrklEQVR42u3aQW7jQAwEwPz/095rgIXibnImcIDSSbDH0pQOIk3y6ys+Xt+Op8+/f5uv/3/N0xWeVh448PDw8BZbz7ebnOcP6OeHlax8fFh4eHh413hPG9rHnFkAyB/oGwseHh7eB/CSF/QMkOTDeHh4eH+Rl6xs1yfXwcPDw/s0XlKMSC7XFnzbAHOx1oKHh4cX8/KCwuecX+nv4eHh4a276vtyap5YzwLAm93i4eHhXeDlL9x9ybXY0Ojujyvx8PDwfoXXtrvyUmxbsEgKu29KJ3h4eHgXePsi7Oy3s5WrUgUeHh7eIV6+6VmQaFPh9tVf9Pfw8PDw1rwkYU0GBdrBrDzY5DupZ8Hw8PDwRrxki6cS5bz1dbHWgoeHh3ehzjl70/78im+3OGuGrUh4eHh4I15RvRgNUe1Hu1YjCHh4eHiHeG1rvw0G+yT4SusLDw8P7ygvjyebgYBNiaF4WHh4eHjXeHmtIs/Qc1IyarCaicDDw8M7ymub9KcKtZuxgM0IAh4eHt4NXnubTbmhbXq1oQIPDw/vBq9tRG0S7lnRNvnk8RwPDw/vGm9z+9l41uxq+d6K7hkeHh7egjdLl2djB21ReMjGw8PDu8zLywd5GEiKv5tv3wQYPDw8vAu8n0PCrMSwGQXYPLIowODh4eEd4m1aUG3waJtbs2t+5Tk+Hh4e3qG/8ZvR0rwlNotgr+DAw8PD+31e+4e/TbjbwaxVLMDDw8M7ynuVx+z5nUrHk/0U46p4eHh4I96+YJHfMi/1tucHDjw8PLyS1ya7eamiLR9sOnhvihF4eHh4F3j7tLhNneuNjrpdeHh4eJ/JS5Ld2V3asjIeHh7e5/Pa1DxhJ8MKRfDAw8PDu8ZLygQ3vm1LxnVjDA8PD+8CbzYKcOOT2aYP9Prw8PDwUt4/lq9UuakcQgQAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.0"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.0" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

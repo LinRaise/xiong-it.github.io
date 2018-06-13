@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-90313637-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="true">
+    
+    
+    
+    <title>Design Patterns in Android：责任链模式 | MichaelX&#39;s Blog | MichaelX的开发博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Android,设计模式,Design Pattern,责任链模式,Chain-of-responsibility">
+    <meta name="description" content="今天给大家分享的是《设计模式Android篇:责任链模式》。今天将通过Android源码和Android开发案例跟大家讲解什么是责任链模式。">
+<meta name="keywords" content="Android,设计模式,Design Pattern,责任链模式,Chain-of-responsibility">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Design Patterns in Android：责任链模式">
+<meta property="og:url" content="http://blog.michaelx.tech/2018-05/Design-Patterns-in-Android：责任链模式/index.html">
+<meta property="og:site_name" content="MichaelX&#39;s Blog">
+<meta property="og:description" content="今天给大家分享的是《设计模式Android篇:责任链模式》。今天将通过Android源码和Android开发案例跟大家讲解什么是责任链模式。">
+<meta property="og:image" content="http://oler3nq5z.bkt.clouddn.com/%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F.png-80style">
+<meta property="og:image" content="http://oler3nq5z.bkt.clouddn.com/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E5%B1%82%E7%BA%A7.png">
+<meta property="og:updated_time" content="2018-06-13T09:26:54.603Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Design Patterns in Android：责任链模式">
+<meta name="twitter:description" content="今天给大家分享的是《设计模式Android篇:责任链模式》。今天将通过Android源码和Android开发案例跟大家讲解什么是责任链模式。">
+<meta name="twitter:image" content="http://oler3nq5z.bkt.clouddn.com/%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F.png-80style">
+    
+        <link rel="alternate" type="application/atom+xml" title="MichaelX&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.0">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">MichaelX</h5>
+          https://github.com/xiong-it
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                关于
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xiong-it" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://blog.csdn.net/xiong_it" target="_blank" >
+                <i class="icon icon-lg icon-link"></i>
+                CSDN
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Design Patterns in Android：责任链模式</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Design Patterns in Android：责任链模式</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-05-14T17:55:55.000Z" itemprop="datePublished" class="page-time">
+  2018-05-14
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Design-Pattern/">Design Pattern</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#前言"><span class="post-toc-number">1.</span> <span class="post-toc-text">前言</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#责任链模式定义"><span class="post-toc-number">2.</span> <span class="post-toc-text">责任链模式定义</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#责任链模式的UML类图"><span class="post-toc-number">3.</span> <span class="post-toc-text">责任链模式的UML类图</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#责任链示例代码"><span class="post-toc-number">4.</span> <span class="post-toc-text">责任链示例代码</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Android源码中责任链模式"><span class="post-toc-number">5.</span> <span class="post-toc-text">Android源码中责任链模式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Android开发中的责任链模式实践"><span class="post-toc-number">6.</span> <span class="post-toc-text">Android开发中的责任链模式实践</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#总结"><span class="post-toc-number">7.</span> <span class="post-toc-text">总结</span></a></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-Design-Patterns-in-Android：责任链模式"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Design Patterns in Android：责任链模式</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-05-14 17:55:55" datetime="2018-05-14T17:55:55.000Z"  itemprop="datePublished">2018-05-14</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Design-Pattern/">Design Pattern</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>今天给大家分享的是《设计模式Android篇:责任链模式》。<br>今天将通过Android源码和Android开发案例跟大家讲解什么是责任链模式。<br><a id="more"></a></p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>非常抱歉，本系列博客长达半年没更新了，今日偶得灵感，更新一波《设计模式Android篇:责任链模式》。点击此处查看<a href="http://blog.csdn.net/xiong_it/article/details/54574020" target="_blank" rel="external">《Design Patterns in Android》</a>系列其他文章。</p>
+<blockquote>
+<p>本文原创作者MichaelX。<br>CSDN博客：<a href="http://blog.csdn.net/xiong_it" target="_blank" rel="external">http://blog.csdn.net/xiong_it</a><br>掘金主页：<a href="https://juejin.im/user/56efe6461ea493005565dafd" target="_blank" rel="external">https://juejin.im/user/56efe6461ea493005565dafd</a><br>知乎专栏：<a href="https://zhuanlan.zhihu.com/c_144117654" target="_blank" rel="external">https://zhuanlan.zhihu.com/c_144117654</a><br>个人博客：<a href="http://blog.michaelx.tech">http://blog.michaelx.tech</a><br>转载请注明出处。</p>
+</blockquote>
+<h2 id="责任链模式定义"><a href="#责任链模式定义" class="headerlink" title="责任链模式定义"></a>责任链模式定义</h2><blockquote>
+<p>职责链(Chain-of-responsibility pattern):它是一种对象的行为模式。在责任链模式里，很多对象由每一个对象对其下家的引用而连接起来形成一条链。请求在这个链上传递，直到链上的某一个对象决定处理此请求。发出这个请求的客户端并不知道链上的哪一个对象最终处理这个请求，这使得系统可以在不影响客户端的情况下动态地重新组织和分配责任。</p>
+</blockquote>
+<h2 id="责任链模式的UML类图"><a href="#责任链模式的UML类图" class="headerlink" title="责任链模式的UML类图"></a>责任链模式的UML类图</h2><p><img src="http://oler3nq5z.bkt.clouddn.com/%E8%B4%A3%E4%BB%BB%E9%93%BE%E6%A8%A1%E5%BC%8F.png-80style" alt="责任链模式类图"><br><strong>责任链模式各角色分工：</strong></p>
+<ul>
+<li>Client:发出请求的高层代码。</li>
+<li>Handler:定义一个处理请求的接口。一般会定义一个处理请求的抽象方法（handleRequest()），以及一个set方法(setSuccessor)来指定下后续处理者。</li>
+<li>ConcreteHandler:具体的请求处理者，收到请求后可以自己处理，也可以将请求传递给后续处理者。</li>
+</ul>
+<h2 id="责任链示例代码"><a href="#责任链示例代码" class="headerlink" title="责任链示例代码"></a>责任链示例代码</h2><p>这里举个栗子：<strong>老王</strong>在中介所要买个<strong>二手房</strong>，他提出价格过高，希望得到更多的优惠，比如88折，中介经纪人小明收到请求。以下是处理流程。</p>
+<p>Client发起购房请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		HouseBuyer laowang = <span class="keyword">new</span> HouseBuyer(<span class="string">"老王"</span>);</div><div class="line">		laowang.buyHouse(<span class="string">"88折卖不卖？"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HouseBuyer</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">buyHouse</span><span class="params">(<span class="keyword">int</span> accountOff)</span> </span>&#123;</div><div class="line">		AbsAgency xiaoming = <span class="keyword">new</span> Staff(<span class="string">"底层员工小明"</span>);</div><div class="line">		xiaoming.handle(accountOff);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>抽象处理者Handler<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">AbsAgency</span> </span>&#123;</div><div class="line">	<span class="keyword">protected</span> AbsAgency mAgency;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setNextHandler</span><span class="params">(AbsAgency agency)</span> </span>&#123;</div><div class="line">		<span class="keyword">this</span>.mAgency = agency;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// 处理折扣</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">(<span class="keyword">int</span> accountOff)</span></span>;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> AbsAgency <span class="title">geNextHandler</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">return</span> mAgency;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>具体处理者：处理购房请求<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Staff</span> <span class="keyword">extends</span> <span class="title">AbsAgency</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">(<span class="keyword">int</span> accountOff)</span> </span>&#123;</div><div class="line">		<span class="comment">// 如果折扣低于80折，不出售；</span></div><div class="line">		<span class="comment">// 如果90折以上，一线员工自行处理;</span></div><div class="line">		<span class="comment">// 低于90折，需要汇报经理处理</span></div><div class="line">		<span class="keyword">if</span> (accountOff &lt;= <span class="number">80</span>) &#123;</div><div class="line">			System.out.println(<span class="string">"价格太低，要吃土咯。。。"</span>);</div><div class="line">		&#125; <span class="keyword">else</span> <span class="keyword">if</span> (accountOff &gt; <span class="number">90</span> &amp;&amp; accountOff &lt;= <span class="number">100</span>) &#123;</div><div class="line">			System.out.println(<span class="string">"价格合适，卖给你了。"</span>);</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			setNextHandler(<span class="keyword">new</span> Manager(<span class="string">"上级经理"</span>));</div><div class="line">			getNextHandler().handle(accountOff);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Manager</span> <span class="keyword">extends</span> <span class="title">AbsAgency</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">handle</span><span class="params">(<span class="keyword">int</span> accountOff)</span> </span>&#123;</div><div class="line">		<span class="comment">// 如果折扣低于80折，不出售；</span></div><div class="line">		<span class="comment">// 根据人品决定是否接受购房请求</span></div><div class="line">		<span class="keyword">if</span> (accountOff &lt;= <span class="number">80</span>) &#123;</div><div class="line">			System.out.println(<span class="string">"价格太低，要吃土咯。。。"</span>);</div><div class="line">		&#125; <span class="keyword">else</span> &#123;</div><div class="line">			System.out.println(<span class="string">"老王人品还行，成交。"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div></pre></td></tr></table></figure></p>
+<p>最终老王的购房请求在经理这个级别得到了处理，但是老王才不关心谁解决的，只要能低价买到这个房子就行了。</p>
+<h2 id="Android源码中责任链模式"><a href="#Android源码中责任链模式" class="headerlink" title="Android源码中责任链模式"></a>Android源码中责任链模式</h2><p>责任链模式思想在Android源码中的体现莫过于：触摸事件的处理和分发了。每当用户接触屏幕时，Android都会将其打包成一个MotionEvent对象从ViewTree自顶而下的分发处理。<br>代码过多，这里只用一张图表示其思路：<br><img src="http://oler3nq5z.bkt.clouddn.com/%E4%BA%8B%E4%BB%B6%E5%88%86%E5%8F%91%E5%B1%82%E7%BA%A7.png" alt="此处输入图片的描述"><br>其方向为：<code>Activity---&gt;ViewGroup---&gt;View</code><br>具体源码可参考郭神的<a href="https://blog.csdn.net/guolin_blog/article/details/9097463" target="_blank" rel="external">《Android事件分发机制完全解析，带你从源码的角度彻底理解(上)》</a>，阅读源码，我们可以发现dispatchTouchEvent有点类似上面责任链实例代码中的handle()方法，自己能处理就处理，处理不了就向下一级分发处理。</p>
+<h2 id="Android开发中的责任链模式实践"><a href="#Android开发中的责任链模式实践" class="headerlink" title="Android开发中的责任链模式实践"></a>Android开发中的责任链模式实践</h2><p>举个例子，我们的图片需要设计三级缓存，那么它是怎么取缓存的呢？<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">AbsCacheManager bmpCache = <span class="keyword">new</span> MemoryCache();</div><div class="line">Bitmap bmp = bmpCache.getCache(cacheKey);</div></pre></td></tr></table></figure></p>
+<p>先定义一个缓存抽象类<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public abstract class AbsCacheManager &#123;</div><div class="line">	protected AbsCacheManager mCache;</div><div class="line">    // 获取Bitmap</div><div class="line">	public abstract Bitmap getCache(String cacheKey); </div><div class="line"></div><div class="line">	public void setNextHandler(AbsCacheManager manager) &#123;</div><div class="line">		mCache = manager;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	public AbsCacheManager getNextHandler() &#123;</div><div class="line">		return mCache;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>下面是具体实施者：内存缓存，磁盘缓存，网络获取<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MemoryCache</span> <span class="keyword">extends</span> <span class="title">AbsCacheManager</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> Bitmap <span class="title">getCache</span><span class="params">(String cacheKey)</span> </span>&#123;</div><div class="line">		Bitmap bmp = getCacheFromMemory(cacheKey);</div><div class="line">		<span class="comment">// 如果内存缓存为空，则将请求传递给下一位：磁盘缓存来处理</span></div><div class="line">		<span class="keyword">if</span> (bmp == <span class="keyword">null</span>) &#123;</div><div class="line">			setNextHandler(<span class="keyword">new</span> DiskCache());</div><div class="line">			bmp = getNextHandler().getCache(cacheKey);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> bmp;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DiskCache</span> <span class="keyword">extends</span> <span class="title">AbsCacheManager</span> </span>&#123;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> Bitmap <span class="title">getCache</span><span class="params">(String cacheKey)</span> </span>&#123;</div><div class="line">		Bitmap bmp = getCacheFromDisk(cacheKey);</div><div class="line">				<span class="comment">// 如果磁盘缓存为空，则将请求传递给下一位：网络图片下载来处理</span></div><div class="line">		<span class="keyword">if</span> (bmp == <span class="keyword">null</span>) &#123;</div><div class="line">			setNextHandler(<span class="keyword">new</span> NetworkFetchManager());</div><div class="line">			bmp = getNextHandler().getCache(cacheKey);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> bmp;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NetworkFetchManager</span> <span class="keyword">extends</span> <span class="title">AbsCacheManager</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> Bitmap <span class="title">getCache</span><span class="params">(String cacheKey)</span> </span>&#123;</div><div class="line">		Bitmap bmp = getCacheFromNetWork(cacheKey);</div><div class="line">		<span class="keyword">return</span> bmp;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>一条责任链跃然纸上：内存—&gt;磁盘-&gt;网络。</p>
+<p>当然，以上没有考虑线程切换问题，实际操作是需要考虑耗时操作在子线程执行的。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其实责任链模式就是在某种场景下：有一个请求需要处理，但是最终处理者又不确定的时候采用的一种模式。<br>但是其处理者对于客户端是透明的，无需知道谁将处理这个请求，只需要抛出请求，拿到结果即可。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-06-13T09:26:54.603Z" itemprop="dateUpdated">2018-06-13 09:26:54</time>
+</span><br>
+
+
+        
+        版权声明：本文为博主原创文章，转载请注明出处：<<a href="/2018-05/Design-Patterns-in-Android：责任链模式/" target="_blank" rel="external">http://blog.michaelx.tech/2018-05/Design-Patterns-in-Android：责任链模式/</a>
+        
+    </div>
+    <footer>
+        <a href="http://blog.michaelx.tech">
+            <img src="/img/avatar.jpg" alt="MichaelX">
+            MichaelX
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Chain-of-responsibility/">Chain-of-responsibility</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Design-Pattern/">Design Pattern</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/设计模式/">设计模式</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/责任链模式/">责任链模式</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.michaelx.tech/2018-05/Design-Patterns-in-Android：责任链模式/&title=《Design Patterns in Android：责任链模式》 — MichaelX's Blog&pic=http://blog.michaelx.tech/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.michaelx.tech/2018-05/Design-Patterns-in-Android：责任链模式/&title=《Design Patterns in Android：责任链模式》 — MichaelX's Blog&source=今天给大家分享的是《设计模式Android篇:责任链模式》。今天将通过Android源码和Android开发案例跟大家讲解什么是责任链模式。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.michaelx.tech/2018-05/Design-Patterns-in-Android：责任链模式/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Design Patterns in Android：责任链模式》 — MichaelX's Blog&url=http://blog.michaelx.tech/2018-05/Design-Patterns-in-Android：责任链模式/&via=http://blog.michaelx.tech" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.michaelx.tech/2018-05/Design-Patterns-in-Android：责任链模式/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2018-06/Design-Patterns-in-Android：装饰模式/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Design Patterns in Android：装饰模式</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017-12/Android笔记：Bitmap.Config与内存占用的关/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Android笔记：Bitmap.Config与内存占用的关系</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>MichaelX &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.michaelx.tech/2018-05/Design-Patterns-in-Android：责任链模式/&title=《Design Patterns in Android：责任链模式》 — MichaelX's Blog&pic=http://blog.michaelx.tech/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.michaelx.tech/2018-05/Design-Patterns-in-Android：责任链模式/&title=《Design Patterns in Android：责任链模式》 — MichaelX's Blog&source=今天给大家分享的是《设计模式Android篇:责任链模式》。今天将通过Android源码和Android开发案例跟大家讲解什么是责任链模式。" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.michaelx.tech/2018-05/Design-Patterns-in-Android：责任链模式/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Design Patterns in Android：责任链模式》 — MichaelX's Blog&url=http://blog.michaelx.tech/2018-05/Design-Patterns-in-Android：责任链模式/&via=http://blog.michaelx.tech" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.michaelx.tech/2018-05/Design-Patterns-in-Android：责任链模式/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACrklEQVR42u3awW7jMAwE0P7/T6fXAkW9M6QUZIHn06JwYj0vIDFDfn3F1+vX9fvvf93/8y/Pn8q/4fCFh4eHt156zsgfnH/2+ZXla8bDw8O7zXt+8PM9zy/i+fGv4GrXg4eHh/fJvOc7X+XVlvJ4eHh4/ztvdn8eWODh4eF9Gm9Wzs6OhLaYflPWgoeHh9fVrlEX6XP+faW/h4eHh7fuqucbet70asvi1+LCw8PDu8FrG/95Gyxvhs0GsIo78fDw8I7yZgHBrInVjltthhLw8PDw7vHaplfb5s9j2bYxNowq8PDw8A7x2kJ50+ZvI4x2yKCejMDDw8M7ysu37HbTPxsHF2cdHh4e3iHeqe04f2QS+x4OI/Dw8PCu5ZxJiTzbsvdxcHsU4eHh4d3gJTFrO4C1/5796BUeHh7ePV774z+PIfLjIT94Vp09PDw8vEO8WQmbN7SS8rcdICjCCDw8PLwLvE2gMDsM8lI+Px7+8Z+Eh4eHd4HXDg3MhrE2cUZe7g9/PeDh4eHFvHYrb3/vz0rn9uj6s+zGw8PDu8BrA9NNSJFHwHlwXKwZDw8P7xCvbWvlZXdLyiv95BAadu3w8PDwYt4M3G7fm0bakI2Hh4f3Ft4+ekhi2RzfDh8UMS4eHh7eiDcbIzg7CpBv97PjBw8PD+8Grx0I2AS1eWNs9jqKpAQPDw/vEG9WIg/b+YtjJhnkwsPDw3sPLx9+yh88XNbiSMDDw8O7x3uV12ahm85UW/rj4eHh3ePtA4tZ6Zy/mmGj61Qeg4eHhxcvPX/kHpl/Tx5S4OHh4b2Ht49lbwS1q5QFDw8P78N4+3BhFkbUpTYeHh7ex/A2oW3bSEsabPU7w8PDw1vzZk2vdkFt7tqW7KusBQ8PD6/ruReHR7uVJ5/aLPpArw8PDw8v5X0D4XxUuSuWQ/EAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.0"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.0" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

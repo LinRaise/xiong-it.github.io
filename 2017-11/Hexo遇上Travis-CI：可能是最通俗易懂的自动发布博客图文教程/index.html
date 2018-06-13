@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-90313637-1', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics -->
+
+
+    
+
+    
+
+
+<!-- Baidu Push -->
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+<!-- End Baidu Push -->
+
+
+    <meta charset="utf-8">
+    
+    <meta name="google-site-verification" content="true">
+    
+    
+    
+    <title>Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程 | MichaelX&#39;s Blog | MichaelX的开发博客</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Hexo,travis">
+    <meta name="description" content="今天笔者就来介绍下利用travis-ci这个持续集成平台简化发布流程.">
+<meta name="keywords" content="Hexo,travis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程">
+<meta property="og:url" content="http://blog.michaelx.tech/2017-11/Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程/index.html">
+<meta property="og:site_name" content="MichaelX&#39;s Blog">
+<meta property="og:description" content="今天笔者就来介绍下利用travis-ci这个持续集成平台简化发布流程.">
+<meta property="og:image" content="http://oler3nq5z.bkt.clouddn.com/github_token.png">
+<meta property="og:image" content="http://oler3nq5z.bkt.clouddn.com/travis_sync.png">
+<meta property="og:image" content="http://oler3nq5z.bkt.clouddn.com/travis_setting1.png">
+<meta property="og:image" content="http://oler3nq5z.bkt.clouddn.com/travis_setting2.png">
+<meta property="og:updated_time" content="2018-06-13T09:26:54.603Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程">
+<meta name="twitter:description" content="今天笔者就来介绍下利用travis-ci这个持续集成平台简化发布流程.">
+<meta name="twitter:image" content="http://oler3nq5z.bkt.clouddn.com/github_token.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="MichaelX&#39;s Blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="/css/style.css?v=1.7.0">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">MichaelX</h5>
+          https://github.com/xiong-it
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-user"></i>
+                关于
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/xiong-it" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://blog.csdn.net/xiong_it" target="_blank" >
+                <i class="icon icon-lg icon-link"></i>
+                CSDN
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="Search">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-11-30T14:10:18.000Z" itemprop="datePublished" class="page-time">
+  2017-11-30
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/hexo/">hexo</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Hexo发布博客流程"><span class="post-toc-number">1.</span> <span class="post-toc-text">Hexo发布博客流程</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Travis-CI简介"><span class="post-toc-number">2.</span> <span class="post-toc-text">Travis-CI简介</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#事先预备"><span class="post-toc-number">3.</span> <span class="post-toc-text">事先预备</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#推送hexo博客源码到github"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">推送hexo博客源码到github</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#配置github-token"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">配置github token</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#配置Travis-CI"><span class="post-toc-number">4.</span> <span class="post-toc-text">配置Travis-CI</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#在travis进入仓库同步管理"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">在travis进入仓库同步管理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#travis设置"><span class="post-toc-number">4.2.</span> <span class="post-toc-text">travis设置</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#编写-travis-yml文件"><span class="post-toc-number">4.3.</span> <span class="post-toc-text">编写.travis.yml文件</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#大功告成"><span class="post-toc-number">5.</span> <span class="post-toc-text">大功告成</span></a></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-11-30 14:10:18" datetime="2017-11-30T14:10:18.000Z"  itemprop="datePublished">2017-11-30</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/hexo/">hexo</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>今天笔者就来介绍下利用<a href="https://travis-ci.org/" target="_blank" rel="external">travis-ci</a>这个持续集成平台简化发布流程.<br><a id="more"></a><br>相信很多同学都有自己的博客，如果没有，可以参看<a href="http://blog.csdn.net/xiong_it/article/details/55193816" target="_blank" rel="external">《Hexo建站：部署到github》</a>，利用Hexo和github pages服务搭建一个美观便捷的博客，Hexo可以将你编写的md文档解析渲染成html网页，最后通过git推送到github即可形成一个网站。</p>
+<h1 id="Hexo发布博客流程"><a href="#Hexo发布博客流程" class="headerlink" title="Hexo发布博客流程"></a>Hexo发布博客流程</h1><ol>
+<li>搭建hexo环境（一系列软件安装，配置）</li>
+<li>hexo new post “文章名称”</li>
+<li>编写md文档</li>
+<li>hexo clean</li>
+<li>hexo generate</li>
+<li>hexo deploy</li>
+</ol>
+<p>以上第一步一般只在第一次搭建的时候需要进行，后续只要执行2~6步即可。但是存在一些情况，假如你需要在不同的电脑上发布博客呢？假如你重装了系统呢？是不是需要重新来一次？要知道最繁琐的步骤就是第一步，这里面可以分出很多步来做，看过上面那篇博客或者自己正在使用<code>hexo+gh</code>手动发布博客的同学都知道多痛苦。</p>
+<p>今天笔者就来介绍下利用<a href="https://travis-ci.org/" target="_blank" rel="external">travis-ci</a>这个持续集成平台简化发布流程，简化后流程:</p>
+<ol>
+<li>编写md文档</li>
+<li>git push</li>
+</ol>
+<p>利用travis大大提高了效率！是不是很诱人？</p>
+<h1 id="Travis-CI简介"><a href="#Travis-CI简介" class="headerlink" title="Travis-CI简介"></a>Travis-CI简介</h1><p>Travis CI 是开源持续集成构建项目，用来构建托管在GitHub上的代码。它提供了多种编程语言的支持，包括JavaScript，Java，Scala，Ruby，PHP，Haskell和Erlang在内的多种语言。</p>
+<p>当我们每次进行<code>git push</code>等动作时，Travis CI 会自动检测我们的提交，然后根据配置文件<code>.travis.yml</code>帮我们自动生成、部署静态网页。</p>
+<h1 id="事先预备"><a href="#事先预备" class="headerlink" title="事先预备"></a>事先预备</h1><h2 id="推送hexo博客源码到github"><a href="#推送hexo博客源码到github" class="headerlink" title="推送hexo博客源码到github"></a>推送hexo博客源码到github</h2><ol>
+<li>cd进入自己的本地hexo博客文件夹，就是你要发布博客时进入的那个文件夹。</li>
+<li>将自己本地所有hexo博客源码文件push到github。<br>推送教程：<a href="http://blog.csdn.net/xiong_it/article/details/68944728" target="_blank" rel="external">《如何提交代码到Github》</a></li>
+</ol>
+<blockquote>
+<p>注意：不是<code>hexo deploy</code>更新博客repo！而是直接把本地博客托管到github。</p>
+</blockquote>
+<p>笔者直接把本地hexo博客源码托管到了<a href="http://xiong-it.github.io" target="_blank" rel="external">xiong-it.github.io</a>的<strong>hexo</strong>分支，博客网站则在默认的<strong>master</strong>分支上。不想采取分支管理的话，你也可以把本地hexo博客托管到独立仓库，但是在配置travis同步时会有所不同。本文采取分支管理方式。</p>
+<h2 id="配置github-token"><a href="#配置github-token" class="headerlink" title="配置github token"></a>配置github token</h2><p>那既然需要使用travis自动化更新你的博客，travis自然需要读写你的github上的repo。github提供了token机制来供外部访问你的仓库。</p>
+<p>进入<a href="https://github.com/settings/tokens" target="_blank" rel="external">https://github.com/settings/tokens</a>，生成一个供travis读写你的github用的token，至于token的权限，笔者直接全选了，但是不建议这样做，风险比较大，token注意保密，待会会用到。<br><img src="http://oler3nq5z.bkt.clouddn.com/github_token.png" alt="此处输入图片的描述"></p>
+<h1 id="配置Travis-CI"><a href="#配置Travis-CI" class="headerlink" title="配置Travis-CI"></a>配置Travis-CI</h1><p>使用github账号登陆<a href="https://travis-ci.org/" target="_blank" rel="external">travis</a>，如果没有github账号的同学，可以参考<a href="http://blog.csdn.net/xiong_it/article/details/68944728" target="_blank" rel="external">《如何提交代码到Github》</a>注册一个自己的github账号。</p>
+<h2 id="在travis进入仓库同步管理"><a href="#在travis进入仓库同步管理" class="headerlink" title="在travis进入仓库同步管理"></a>在travis进入仓库同步管理</h2><p>进入<a href="https://travis-ci.org/profile/" target="_blank" rel="external">https://travis-ci.org/profile</a>，<strong>打开刚才托管的hexo博客源码仓库同步开关，不一定是博客网站repo</strong>。由于笔者直接把本地hexo博客源码托管到了<a href="http://xiong-it.github.io" target="_blank" rel="external">xiong-it.github.io</a>的<strong>hexo</strong>分支，所以也就是打开网站repo。如果你不是采取的分支管理，而是将hexo博客源码托管道独立repo，打开对应的github repo开关即可。<br>如图：<br><img src="http://oler3nq5z.bkt.clouddn.com/travis_sync.png" alt="此处输入图片的描述"></p>
+<h2 id="travis设置"><a href="#travis设置" class="headerlink" title="travis设置"></a>travis设置</h2><p>点击上图中红色圆圈，进入设置页，设置自动化编译时机，自动化编译过程中需要用到的变量。<br> <img src="http://oler3nq5z.bkt.clouddn.com/travis_setting1.png" alt="此处输入图片的描述"></p>
+<p> <img src="http://oler3nq5z.bkt.clouddn.com/travis_setting2.png" alt="此处输入图片的描述"></p>
+<p>以上设置的含义是：</p>
+<ul>
+<li>只在.travis.yml文件存在时编译，必选！</li>
+<li>当仓库/分支发生更新时编译，也就是push后进行编译的意思，一般会需要选择，方便自动化构建。</li>
+<li>加了GH_TOEKN等变量，value值为刚才预备工作中准备的token字符串</li>
+</ul>
+<h2 id="编写-travis-yml文件"><a href="#编写-travis-yml文件" class="headerlink" title="编写.travis.yml文件"></a>编写.travis.yml文件</h2><p><code>.travis.yml</code>是<a href="https://travis-ci.org/" target="_blank" rel="external">travis</a>平台进行自动化构建的配置文件，travis会根据配置文件生成一个shell自动化脚本。</p>
+<p>进入hexo博客源码本地repo<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">cd hexo</div><div class="line">touch .travis.yml</div><div class="line">vim .travis.yml</div></pre></td></tr></table></figure></p>
+<p>.travis.yml示例如下：<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 指定语言环境</span></div><div class="line"><span class="attr">language:</span> <span class="string">node_js</span></div><div class="line"><span class="comment"># 指定需要sudo权限</span></div><div class="line"><span class="attr">sudo:</span> <span class="string">required</span></div><div class="line"><span class="comment"># 指定node_js版本</span></div><div class="line"><span class="attr">node_js:</span> </div><div class="line"><span class="bullet">  -</span> <span class="number">7.9</span><span class="number">.0</span></div><div class="line"><span class="comment"># 指定缓存模块，可选。缓存可加快编译速度。</span></div><div class="line"><span class="attr">cache:</span></div><div class="line"><span class="attr">  directories:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">node_modules</span></div><div class="line">    </div><div class="line"><span class="comment"># 指定博客源码分支，因人而异。hexo博客源码托管在独立repo则不用设置此项</span></div><div class="line"><span class="attr">branches:</span></div><div class="line"><span class="attr">  only:</span></div><div class="line"><span class="bullet">    -</span> <span class="string">hexo</span> </div><div class="line"></div><div class="line"><span class="attr">before_install:</span></div><div class="line"><span class="bullet">  -</span> <span class="string">npm</span> <span class="string">install</span> <span class="bullet">-g</span> <span class="string">hexo-cli</span></div><div class="line"></div><div class="line"><span class="comment"># Start: Build Lifecycle</span></div><div class="line"><span class="attr">install:</span></div><div class="line"><span class="bullet">  -</span> <span class="string">npm</span> <span class="string">install</span></div><div class="line"><span class="bullet">  -</span> <span class="string">npm</span> <span class="string">install</span> <span class="string">hexo-deployer-git</span> <span class="bullet">--save</span></div><div class="line">  </div><div class="line"><span class="comment"># 执行清缓存，生成网页操作</span></div><div class="line"><span class="attr">script:</span></div><div class="line"><span class="bullet">  -</span> <span class="string">hexo</span> <span class="string">clean</span></div><div class="line"><span class="bullet">  -</span> <span class="string">hexo</span> <span class="string">generate</span></div><div class="line">  </div><div class="line"><span class="comment"># 设置git提交名，邮箱；替换真实token到_config.yml文件，最后depoy部署</span></div><div class="line"><span class="attr">after_script:</span></div><div class="line"><span class="bullet">  -</span> <span class="string">git</span> <span class="string">config</span> <span class="string">user.name</span> <span class="string">"yourName"</span></div><div class="line"><span class="bullet">  -</span> <span class="string">git</span> <span class="string">config</span> <span class="string">user.email</span> <span class="string">"yourEmail"</span></div><div class="line">  <span class="comment"># 替换同目录下的_config.yml文件中gh_token字符串为travis后台刚才配置的变量，注意此处sed命令用了双引号。单引号无效！</span></div><div class="line"><span class="bullet">  -</span> <span class="string">sed</span> <span class="bullet">-i</span> <span class="string">"s/gh_token/$&#123;GH_TOKEN&#125;/g"</span> <span class="string">./_config.yml</span></div><div class="line"><span class="bullet">  -</span> <span class="string">hexo</span> <span class="string">deploy</span></div><div class="line"><span class="comment"># End: Build LifeCycle</span></div></pre></td></tr></table></figure></p>
+<p>修改下_config.yml文件的deploy节点：<br><figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 修改前</span></div><div class="line"><span class="attr">deploy:</span></div><div class="line"><span class="attr">  - type:</span> <span class="string">git</span></div><div class="line"><span class="attr">    repo:</span> <span class="string">git@github.com:xiong-it/xiong-it.github.io.git</span></div><div class="line"><span class="attr">    branch:</span> <span class="string">master</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 修改后</span></div><div class="line"><span class="attr">deploy:</span></div><div class="line"><span class="attr">- type:</span> <span class="string">git</span></div><div class="line">  <span class="comment"># 下方的gh_token会被.travis.yml中sed命令替换</span></div><div class="line"><span class="attr">  repo:</span> <span class="attr">https://gh_token@github.com/xiong-it/xiong-it.github.io.git</span></div><div class="line"><span class="attr">  branch:</span> <span class="string">master</span></div></pre></td></tr></table></figure>
+<p><a href="https://github.com/xiong-it/xiong-it.github.io/tree/hexo" target="_blank" rel="external">yml示例传送门</a></p>
+<p>最后将两个yml文件push更新到hexo博客源码branch或者独立repo，就会在<a href="https://travis-ci.org/ttp://oler3nq5z.bkt.clouddn.com/travis_setting2.png" target="_blank" rel="external">travis后台</a>成功看到第一次构建了。</p>
+<blockquote>
+<p>欢迎访问我的个人hexo博客：<a href="http://xiong-it.github.io" target="_blank" rel="external">http://xiong-it.github.io</a></p>
+</blockquote>
+<h1 id="大功告成"><a href="#大功告成" class="headerlink" title="大功告成"></a>大功告成</h1><p>以后每次更新博客，只需要编写md文件，放入hexo/source/_post/文件夹下，<code>git add，commit，push</code>后，push操作也可以直接使用刚才申请的token，而无需在不同电脑上配置ssh共密钥。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git push https://&lt;your_token&gt;@github.com/xiong-it/xiong-it.github.io.git hexo:hexo</div></pre></td></tr></table></figure></p>
+<p>travis就会读取hexo博客源码分支下的<code>.travis.yml</code>文件，自动帮我们生成并部署网站了。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2018-06-13T09:26:54.603Z" itemprop="dateUpdated">2018-06-13 09:26:54</time>
+</span><br>
+
+
+        
+        版权声明：本文为博主原创文章，转载请注明出处：<<a href="/2017-11/Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程/" target="_blank" rel="external">http://blog.michaelx.tech/2017-11/Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程/</a>
+        
+    </div>
+    <footer>
+        <a href="http://blog.michaelx.tech">
+            <img src="/img/avatar.jpg" alt="MichaelX">
+            MichaelX
+        </a>
+    </footer>
+</blockquote>
+
+        
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/travis/">travis</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.michaelx.tech/2017-11/Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程/&title=《Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程》 — MichaelX's Blog&pic=http://blog.michaelx.tech/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.michaelx.tech/2017-11/Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程/&title=《Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程》 — MichaelX's Blog&source=今天笔者就来介绍下利用travis-ci这个持续集成平台简化发布流程." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.michaelx.tech/2017-11/Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程》 — MichaelX's Blog&url=http://blog.michaelx.tech/2017-11/Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程/&via=http://blog.michaelx.tech" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.michaelx.tech/2017-11/Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017-12/Android笔记：Bitmap.Config与内存占用的关/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Android笔记：Bitmap.Config与内存占用的关系</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017-11/Android：使用LoadingLayout来展示加载数据时不同状态/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Android：使用LoadingLayout来展示加载数据时不同状态</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</article>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>MichaelX &copy; 2017 - 2018</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://blog.michaelx.tech/2017-11/Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程/&title=《Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程》 — MichaelX's Blog&pic=http://blog.michaelx.tech/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://blog.michaelx.tech/2017-11/Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程/&title=《Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程》 — MichaelX's Blog&source=今天笔者就来介绍下利用travis-ci这个持续集成平台简化发布流程." data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://blog.michaelx.tech/2017-11/Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程》 — MichaelX's Blog&url=http://blog.michaelx.tech/2017-11/Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程/&via=http://blog.michaelx.tech" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://blog.michaelx.tech/2017-11/Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQ4AAAEOCAAAAABd2qZ5AAAD30lEQVR42u3aS5bCMAwEQO5/aeYAQzLdkoFZlFc8CIldLIQ+j0e8nr/W/ZVX3/19zfN2Xd3zfof5t4YLBw4cOHCUR726dfJpstH8MPf3vHon3/+L++PAgQMHjkMc9498BivZ6P5naIN3fkYcOHDgwPEtjvtAmCd4yZHuX+c7wYEDBw4c/59js9G8Rre5BgcOHDhwfJdj3/j5fCsrOcUba6U4cODAgWMe9R6bROs/vH7LfAcOHDhw4CgbP21YakNmEtTzUYm2Sfbiuzhw4MCBY82Rt/9ng2htqrZhbXeOAwcOHDjezZFsK79yP5SQJ2NJMC6+hQMHDhw41hztiED+4Nkw3GZYoR2qwIEDBw4cZzmS8l9emGuDZTKU0Ab1tlz4yG+BAwcOHDhGU2GzrSSHzJtGszRylo7+cSIcOHDgwFFy5E2gTbI0C3h5CN9ANOktDhw4cODoOOr0JgbNt7UPvbNBPRw4cODAcZbj1IPzo7bH2PwAeUkRBw4cOHDsOWZpVfu62MoiJcvTyD/ex4EDBw4cC468nJc3jdoQe6qBlO//8h0cOHDgwHGIIx9KyMfRZm2kNog+g1WMXODAgQMHjjXHbHQgh2vDdk5Ql/xmiRwOHDhw4FhwPMrVpn+zp+TPPbZw4MCBA8fbIJKmUQ7UDsa1iVne9Lq8Gw4cOHDgOMoxa97kBbs2DG/4hiEfBw4cOHCsOWaBqg1p7fHaA7cjF0UqiAMHDhw4So5NWbAddDhV/mtbUPkpcODAgQPHKY7Z8Fmb4O2HEmZARSkTBw4cOHCsOWZjDXlA3ZQON2F+UwbFgQMHDhx7jllQjIzjTZ/CnbE+9v8RcODAgQNHWZjbtJQ2gXyT1K36bzhw4MCBY8SRJz/5UfMBiPZZeXo2G5XAgQMHDhx7jrZ8lh+yHTXYNKU2e8OBAwcOHO/gyIcVZuW5Wejd8M2SRhw4cODA8T6OTaCahcn78LlP+fI94MCBAweODUdysLYJlN9zH+aTMYWcEgcOHDhwnOLYDMm1Q2mzwbs2AM/+EODAgQMHjlMcychaPm13ingzKjccm8OBAwcOHGuOWeo1C3vtmoXwPRAOHDhw4NhwPMs1C6v5p3kzqS1WRqkjDhw4cOBYc7RhLy/JbYYkinQrTvCK5hMOHDhw4FhzJMG1bUFtUqmEI99zHWhx4MCBA8chjrb09qEIvx6nSO6JAwcOHDi+xXF1fRIU8yv3BcQVCg4cOHDg+CDHJs1rS4obyrY0ufrfgQMHDhw4FluZlQjbpG7WjtoXFnHgwIEDxymOPNVpafKxg+T9tjSZpJrDIiMOHDhw4Hi9qx9AsVMlvAmQsgAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="/js/main.min.js?v=1.7.0"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="/js/search.min.js?v=1.7.0" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>

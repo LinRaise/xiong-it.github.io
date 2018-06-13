@@ -1,0 +1,16 @@
+http://blog.michaelx.tech/2018-06/Design-Patterns-in-Android：装饰模式/
+http://blog.michaelx.tech/2018-05/Design-Patterns-in-Android：责任链模式/
+http://blog.michaelx.tech/2017-12/Android笔记：Bitmap.Config与内存占用的关/
+http://blog.michaelx.tech/2017-11/Hexo遇上Travis-CI：可能是最通俗易懂的自动发布博客图文教程/
+http://blog.michaelx.tech/2017-11/Android：使用LoadingLayout来展示加载数据时不同状态/
+http://blog.michaelx.tech/2017-10/Android开发：RecyclerView平滑流畅的滑动到指定位置/
+http://blog.michaelx.tech/2017-09/ Android开发小记：编译ijkplayer以支持更多视频格式/
+http://blog.michaelx.tech/2017-05/Android开发：使用AutoInputAuthCode快速实现自动填写验证码/
+http://blog.michaelx.tech/2017-05/科学上网-安装Shadowsocks-Server-on-VPS/
+http://blog.michaelx.tech/2017-03/Ubuntu-14-04编译AOSP-for-Nexus-Pixel/
+http://blog.michaelx.tech/2017-03/Android-BLE智能硬件开发详解/
+http://blog.michaelx.tech/2017-02/Design-Patterns-in-Android：模板方法模式/
+http://blog.michaelx.tech/2017-02/Design-Patterns-in-Android：策略模式/
+http://blog.michaelx.tech/2017-01/Design-Patterns-in-Android：单例模式/
+http://blog.michaelx.tech/2017-01/Design-Patterns-in-Android：目录纲要/
+http://blog.michaelx.tech/2017-01/设计模式系列：OOP设计6大原则/
